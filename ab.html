@@ -1,0 +1,1693 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>MY MAN BD</title>
+
+    <style>
+        :root {
+            --card-bg: rgba(15, 23, 42, 0.45);
+            --accent-color: #38bdf8;
+            --text-color: #f8fafc;
+            --text-muted: #e2e8f0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background:
+                url("ab2.jpg.jpeg")
+                no-repeat center center fixed;
+
+            background-size: auto;
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(10, 25, 47, 0.55);
+            z-index: 1;
+        }
+
+        button,
+        .screen,
+        .modal {
+            z-index: 10;
+        }
+
+        /* =========================
+           زر الموسيقى
+        ========================== */
+
+        .music-control {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+
+            background: rgba(15, 23, 42, 0.85);
+            border: 1px solid var(--accent-color);
+            color: var(--accent-color);
+
+            padding: 9px 14px;
+            border-radius: 20px;
+
+            cursor: pointer;
+            z-index: 2000;
+
+            font-size: 14px;
+
+            display: flex;
+            align-items: center;
+            gap: 6px;
+
+            backdrop-filter: blur(5px);
+        }
+
+        /* =========================
+           الشاشات
+        ========================== */
+
+        .screen {
+            position: absolute;
+
+            width: 100%;
+            height: 100%;
+
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+
+            transition:
+                opacity 0.8s ease,
+                transform 0.8s ease;
+
+            opacity: 0;
+            pointer-events: none;
+
+            transform: scale(0.95);
+
+            padding: 20px;
+        }
+
+        .screen.active {
+            opacity: 1;
+            pointer-events: auto;
+            transform: scale(1);
+        }
+
+        /* =========================
+           الهدية
+        ========================== */
+
+        .gift-box-container {
+            text-align: center;
+            cursor: pointer;
+            animation: bounce 2s infinite;
+        }
+
+        .gift-icon-wrapper {
+            position: relative;
+
+            width: 210px;
+            height: 200px;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+
+            filter:
+                drop-shadow(0 15px 25px rgba(0, 0, 0, 0.5));
+        }
+
+        .gift-bow-svg {
+            width: 130px;
+            height: 60px;
+
+            background: #60a5fa;
+
+            clip-path:
+                polygon(
+                    50% 100%,
+                    0% 20%,
+                    20% 0%,
+                    50% 50%,
+                    80% 0%,
+                    100% 20%
+                );
+
+            position: absolute;
+            top: -15px;
+
+            z-index: 10;
+
+            border-radius: 50% 50% 0 0;
+        }
+
+        .gift-lid {
+            width: 220px;
+            height: 45px;
+
+            background: #0033aa;
+
+            border-radius: 8px 8px 4px 4px;
+
+            position: relative;
+            z-index: 5;
+
+            box-shadow:
+                0 4px 6px rgba(0, 0, 0, 0.15);
+        }
+
+        .gift-body {
+            width: 190px;
+            height: 130px;
+
+            background: #0022cc;
+
+            border-radius: 0 0 16px 16px;
+
+            position: relative;
+            overflow: hidden;
+
+            margin-top: -2px;
+        }
+
+        .gift-vertical-stripe {
+            position: absolute;
+
+            top: 0;
+            bottom: 0;
+            left: 50%;
+
+            transform: translateX(-50%);
+
+            width: 38px;
+
+            background: #60a5fa;
+        }
+
+        .gift-horizontal-stripe {
+            position: absolute;
+
+            top: 35px;
+            left: 0;
+            right: 0;
+
+            height: 25px;
+
+            background: #001588;
+
+            z-index: 2;
+        }
+
+        .gift-info {
+            margin-top: 25px;
+            text-align: center;
+        }
+
+        .gift-info h3 {
+            font-size: 14px;
+            letter-spacing: 2px;
+            color: var(--text-muted);
+        }
+
+        .gift-info h1 {
+            font-size: 28px;
+            color: var(--accent-color);
+
+            margin: 5px 0;
+
+            text-shadow:
+                0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .gift-info p {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        /* =========================
+           الأزرار
+        ========================== */
+
+        .btn-custom {
+            margin-top: 15px;
+
+            padding: 10px 25px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #0284c7,
+                    #38bdf8
+                );
+
+            border: none;
+            border-radius: 30px;
+
+            color: white;
+
+            font-size: 15px;
+            font-weight: bold;
+
+            cursor: pointer;
+
+            box-shadow:
+                0 5px 15px rgba(56, 189, 248, 0.4);
+
+            transition: 0.3s;
+        }
+
+        .btn-custom:hover {
+            transform: scale(1.05);
+
+            box-shadow:
+                0 8px 20px rgba(56, 189, 248, 0.6);
+        }
+
+        /* =========================
+           الكعكة
+        ========================== */
+
+        .cake-container {
+            text-align: center;
+        }
+
+        .cake {
+            font-size: 80px;
+
+            margin-bottom: 20px;
+
+            position: relative;
+
+            cursor: pointer;
+        }
+
+        .flame {
+            font-size: 30px;
+
+            position: absolute;
+
+            top: -25px;
+            left: 50%;
+
+            transform: translateX(-50%);
+
+            animation:
+                flicker 0.5s infinite alternate;
+        }
+
+        .flame.extinguished {
+            display: none;
+        }
+
+        /* =========================
+           البطاقات
+        ========================== */
+
+        .card-slider-wrapper {
+            display: flex;
+
+            align-items: center;
+
+            max-width: 480px;
+            width: 100%;
+
+            position: relative;
+        }
+
+        .card-container {
+            background: var(--card-bg);
+
+            border:
+                1px solid rgba(56, 189, 248, 0.4);
+
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+
+            padding: 25px;
+
+            border-radius: 20px;
+
+            box-shadow:
+                0 20px 40px rgba(0, 0, 0, 0.4);
+
+            width: 100%;
+
+            text-align: center;
+
+            min-height: 330px;
+
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .card-header {
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            gap: 10px;
+
+            margin-bottom: 10px;
+
+            font-size: 20px;
+
+            font-weight: bold;
+
+            color: var(--accent-color);
+        }
+
+        .card-body {
+            font-size: 16px;
+
+            line-height: 1.6;
+
+            color: var(--text-color);
+
+            flex-grow: 1;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            text-shadow:
+                0 1px 2px rgba(0, 0, 0, 0.6);
+        }
+
+        .memory-image {
+    width: 100%;
+    height: auto;
+    max-height: 300px;
+
+    object-fit: contain;
+
+    border-radius: 20px;
+
+    border:
+        2px solid rgba(56, 189, 248, 0.5);
+
+    display: block;
+
+    box-shadow:
+        0 5px 20px rgba(0, 0, 0, 0.5);
+}
+
+        .memory-caption {
+            margin-top: 12px;
+            color: white;
+            font-size: 15px;
+        }
+
+        .side-dots {
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 10px;
+
+            margin-right: 15px;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+
+            border-radius: 50%;
+
+            background:
+                rgba(255, 255, 255, 0.4);
+
+            cursor: pointer;
+
+            transition: 0.3s;
+        }
+
+        .dot.active {
+            background:
+                var(--accent-color);
+
+            transform: scale(1.3);
+        }
+
+        /* =========================
+           النافذة المنبثقة
+        ========================== */
+
+        .modal {
+            position: fixed;
+
+            inset: 0;
+
+            background:
+                rgba(0, 0, 0, 0.75);
+
+            backdrop-filter: blur(5px);
+
+            display: flex;
+
+            justify-content: center;
+            align-items: center;
+
+            opacity: 0;
+
+            pointer-events: none;
+
+            transition: 0.3s;
+
+            z-index: 3000;
+
+            padding: 20px;
+        }
+
+        .modal.open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-content {
+            background:
+                rgba(15, 23, 42, 0.95);
+
+            border:
+                1px solid var(--accent-color);
+
+            padding: 30px;
+
+            border-radius: 20px;
+
+            max-width: 500px;
+
+            width: 100%;
+
+            max-height: 80vh;
+
+            overflow-y: auto;
+
+            position: relative;
+
+            box-shadow:
+                0 25px 50px rgba(0, 0, 0, 0.6);
+        }
+
+        .close-modal {
+            position: absolute;
+
+            top: 15px;
+            left: 15px;
+
+            background: none;
+
+            border: none;
+
+            color: white;
+
+            font-size: 22px;
+
+            cursor: pointer;
+        }
+
+        /* =========================
+           الحركات
+        ========================== */
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        @keyframes flicker {
+            0% {
+                opacity: 1;
+                transform:
+                    translateX(-50%) scale(1);
+            }
+
+            100% {
+                opacity: 0.6;
+                transform:
+                    translateX(-50%) scale(0.9);
+            }
+        }
+
+        /* =========================
+           تحسين الهاتف
+        ========================== */
+
+        @media (max-width: 600px) {
+
+            .music-control {
+                top: 10px;
+                left: 10px;
+                font-size: 12px;
+                padding: 7px 10px;
+            }
+
+            .gift-icon-wrapper {
+                transform: scale(0.85);
+            }
+
+            .gift-info h1 {
+                font-size: 25px;
+            }
+
+            .card-slider-wrapper {
+                max-width: 95%;
+            }
+
+            .card-container {
+                min-height: 300px;
+                padding: 20px;
+            }
+
+            .card-header {
+                font-size: 20px;
+            }
+
+            .card-body {
+                font-size: 20px;
+            }
+
+            .memory-image {
+    width: 100%;
+    height: auto;
+    max-height: 300px;
+
+    object-fit: contain;
+
+    border-radius: 20px;
+
+    border:
+        2px solid rgba(56, 189, 248, 0.5);
+
+    display: block;
+
+    box-shadow:
+        0 5px 20px rgba(0, 0, 0, 0.5);
+}
+
+            .side-dots {
+                margin-right: 8px;
+                gap: 8px;
+            }
+
+            .dot {
+                width: 10px;
+                height: 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- =========================
+         زر الموسيقى
+    ========================== -->
+
+    <button
+        class="music-control"
+        id="music-btn"
+        onclick="toggleMusic()">
+
+        🎵
+
+        <span id="music-text">
+            تشغيل الموسيقى
+        </span>
+
+    </button>
+
+
+    <!-- =========================
+         الموسيقى
+    ========================== -->
+
+    <audio
+        id="bg-music"
+        loop
+        preload="auto">
+
+        <source
+            src="songbd.mp3.mp3"
+            type="audio/mpeg">
+
+        متصفحك لا يدعم تشغيل الصوت.
+
+    </audio>
+
+
+    <!-- =========================
+         الشاشة الأولى
+    ========================== -->
+
+    <div
+        class="screen active"
+        id="screen-gift">
+
+        <div
+            class="gift-box-container"
+            onclick="openGift()">
+
+            <div class="gift-icon-wrapper">
+
+                <div class="gift-bow-svg"></div>
+
+                <div class="gift-lid">
+
+                    <div
+                        class="gift-vertical-stripe"
+                        style="height:100%;">
+                    </div>
+
+                </div>
+
+                <div class="gift-body">
+
+                    <div class="gift-vertical-stripe"></div>
+
+                    <div class="gift-horizontal-stripe">
+
+                        <div
+                            class="gift-vertical-stripe"
+                            style="
+                                background:#4188f5;
+                                height:100%;
+                            ">
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="gift-info">
+
+                <h3>
+                   TO
+                </h3>
+
+                <h1>
+                   MY LOVE
+                </h1>
+
+                <p>
+                   FROM : YOUR PRINCESS 👑
+                </p>
+
+                <p
+                    style="
+                        margin-top:10px;
+                        font-size:12px;
+                        color:#38bdf8;
+                    ">
+
+                    (0PEN)
+
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         شاشة الترحيب
+    ========================== -->
+
+    <div
+        class="screen"
+        id="screen-greeting">
+
+        <div style="text-align:center;">
+
+            <h3
+                style="
+                    color:var(--text-muted);
+                    letter-spacing:2px;
+                ">
+
+               HAPPY BIRTHDAY BABE!!
+
+            </h3>
+
+
+            <h1
+                style="
+                    font-size:42px;
+                    color:var(--accent-color);
+                    margin:10px 0;
+                ">
+
+            
+                Turning 19
+
+            </h1>
+
+
+            <p
+                style="
+                    font-size:20px;
+                    margin-bottom:20px;
+                ">
+
+               WISH YOU HAPPY BIRTHDAY!!
+            
+
+            </p>
+
+
+            <button
+                class="btn-custom"
+                onclick="goToCakeScreen()">
+
+               اضغط هنا ياروحي←
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         شاشة الكعكة
+    ========================== -->
+
+    <div
+        class="screen"
+        id="screen-cake">
+
+        <div class="cake-container">
+
+            <h2 style="margin-bottom:15px;">
+               قووول هووووف على الشمعة 🎂
+            </h2>
+
+            <p
+                id="mic-status"
+                style="
+                    color:var(--text-muted);
+                    margin-bottom:20px;
+                    font-size:14px;
+                ">
+
+                جاري تفعيل المايكروفون...
+
+            </p>
+
+
+            <div
+                class="cake"
+                onclick="blowCandleManually()">
+
+                <span
+                    class="flame"
+                    id="candle-flame">
+
+                    🔥
+
+                </span>
+
+                🎂
+
+            </div>
+
+
+            <br>
+
+
+            <button
+                class="btn-custom"
+                onclick="goToMainContent()">
+
+               >>>
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         الشاشة الرئيسية
+    ========================== -->
+
+    <div
+        class="screen"
+        id="screen-main">
+
+        <div class="card-slider-wrapper">
+
+            <div class="card-container">
+
+                <div class="card-header">
+
+                    <span id="card-icon">
+                        💌
+                    </span>
+
+                    <span id="card-title">
+                        رسالة من القلب
+                    </span>
+
+                </div>
+
+
+                <div
+                    class="card-body"
+                    id="card-text">
+
+                    جاري تحميل الرسالة...
+
+                </div>
+
+
+                <div>
+
+                    <button
+                        class="btn-custom"
+                        id="extra-btn"
+                        style="
+                            padding:6px 18px;
+                            font-size:13px;
+                            display:none;
+                        "
+                        onclick="openModal()">
+
+                        قراءة الرسالة كاملة
+
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <div
+                class="side-dots"
+                id="side-dots">
+
+                <div
+                    class="dot active"
+                    onclick="setCard(0)">
+                </div>
+
+                <div
+                    class="dot"
+                    onclick="setCard(1)">
+                </div>
+
+                <div
+                    class="dot"
+                    onclick="setCard(2)">
+                </div>
+
+                <div
+                    class="dot"
+                    onclick="setCard(3)">
+                </div>
+
+                <div
+                    class="dot"
+                    onclick="setCard(4)">
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         النافذة المنبثقة
+    ========================== -->
+
+    <div
+        class="modal"
+        id="message-modal">
+
+        <div class="modal-content">
+
+            <button
+                class="close-modal"
+                onclick="closeModal()">
+
+                ✕
+
+            </button>
+
+
+            <h2
+                style="
+                    color:var(--accent-color);
+                    margin-bottom:15px;
+                "
+                id="modal-title">
+
+               ALL MESSAGE
+
+            </h2>
+
+
+            <p
+                id="full-message-text"
+                style="
+                    line-height:1.8;
+                    color:var(--text-muted);
+                ">
+
+             
+
+
+            </p>
+
+        </div>
+
+    </div>
+
+
+    
+ <script>
+        const cardsData = [
+            {
+                icon: "💌",
+                title: "BIRTHDAY MESSAGE<3",
+                text:"Happy birthday to the person who means more to me than words could ever explain !! I hope this birthday brings you all the happiness, peace, and beautiful moments you deserve...",
+                showButton: true,
+                modalText: "Happy birthday to the person who means more to me than words could ever explain !! I hope this birthday brings you all the happiness, peace, and beautiful moments you deserve. More than anything, I hope this new year of your life brings you closer to everything you've been wishing for, and I hope I get to be there to witness all the beautiful things that are yet to come for you❤️❤️ You're more special to me than you'll ever be able to understand, my love!! Sometimes I try to find the perfect words to explain what you mean to me, but somehow, every word still feels too small. You've become such a beautiful and important part of my life that I honestly can't imagine my days feeling the same without you. You're not just someone who's in my life, you've become someone who's deeply connected to my heart. Before you, I never imagined that one person could become this important to me and somehow, you slowly became a part of everything. You're the first person I want to tell when something makes me happy, the person I think about when I'm having a difficult day, and the person my heart naturally searches for without me even realizing it. I hope you always remember how much you matter to me, especially on the days when you don't feel like you're enough. You are appreciated in ways you probably don't even notice. Your happiness will always mean something to me. I find myself thinking about whether you're okay, whether you've eaten, whether you're tired, or whether something is bothering you. Not because I'm obligated to care, but because caring about you has become something that comes naturally to me. When someone becomes this important to your heart, you start caring about the smallest things without even thinking about it. Thank you for every moment you've shared with me, every smile, every laugh, every conversation, and every memory we've made together. Whether you realize it or not, you've brought so much happiness into my life and changed me in ways I'll always be grateful for. You've shown me how beautiful it can be to genuinely care about someone and love them with your whole heart. If there's one thing I want you to always remember, it's this: you'll never be 'just another person' to me. You'll always be someone special, someone I could never replace. No matter where life takes us, you'll always have a place in my heart that belongs only to you. Because the truth is, you're not simply important to me. You're someone I genuinely cherish, someone whose happiness matters to me, and someone I'll always be thankful for. I love you more than I could ever explain through words, and I hope you never forget how deeply you are loved, valued, and cherished by me. Happy birthday, my love. I hope this is only the beginning of many beautiful years ahead of you, and hopefully, many of them with me by your side❤️❤️❤️❤️❤️❤️❤️❤️"
+
+            },
+       
+
+
+            {
+                icon: "⭐",
+
+                title: "WHAT I LOVE ABOUT YOU",
+
+                text:
+                 "I love your heart, your personality, your kindness, your way of thinking, and all those tiny details that make you .....",
+
+                showButton: true,
+
+                modalText:
+                 "I love your heart, your personality, your kindness, your way of thinking, and all those tiny details that make you who you are. Even the things you may see as flaws are things I would never want to change about you."
+            },
+
+
+            {
+                icon: "🚀",
+
+                title: "THING I WANT TO HAPPEN TO US TOGETHER",
+
+                text:
+                    "There's always a part of me thinking about you and wanting a better future for us...",
+
+                showButton: true,
+
+                modalText:
+                   "There's always a part of me thinking about you and wanting a better future for us. I truly hope that we have a future together, that we continue choosing each other as the years go by, and that one day we can look back at everything we've been through and feel grateful that we had each other. I hope we get to grow older together, to experience life side by side, and eventually grow old next to each other, with the person we love. I hope that even as the years pass and everything around us changes, we'll still have the same love, care, and appreciation for one another. More than anything, I hope that when we're older, we can look at each other and know that we made it through every season of life together, that we stayed by each other's side, and that we got to grow and grow old with the person we chose and loved all along❤️❤️"
+
+            },
+
+
+            /* =====================================
+               الصورة - لحظاتنا الخاصة
+            ====================================== */
+
+            {
+                icon: "📸",
+
+                title: "BIRTHDAY BOY!!",
+
+                text: `
+
+                    <div
+                        style="
+                            width:100%;
+                            height: auto;
+object-fit: contain;
+                            text-align:center;
+                        ">
+
+                        <img
+                            src="ab1.jpg.jpeg.jpeg"
+                            alt=" LOVE YOU"
+                            class="memory-image"
+                            onerror="this.style.display='none'; document.getElementById('image-error').style.display='block';"
+                        >
+
+                        <p
+                            id="image-error"
+                            style="
+                                display:none;
+                                color:#ffb4b4;
+                                font-size:10px;
+                                margin-top:10px;
+                            ">
+
+                            لم يتم العثور على الصورة.
+                            تأكد من وجود ملف ab1.jpg.jpeg بجانب ملف HTML.
+
+                        </p>
+
+                        <p class="memory-caption">
+                            ❤️ I LOVE YOU SOO MUCH BABY❤️
+                        </p>
+
+                    </div>
+
+                `,
+
+                showButton: false
+            },
+
+
+            /* =====================================
+               Spotify
+            ====================================== */
+
+            {
+                icon: "🎵",
+
+                title: "A SONG REMINDS ME OF YOU",
+
+                text: `
+
+                    <div
+                        style="
+                            text-align:center;
+                            width:100%;
+                        ">
+
+                        <p
+                            style="
+                                margin-bottom:10px;
+                                font-size:14px;
+                            ">
+
+                         IT MEANS A LOT, HOPE YOU LIKE IT
+
+                        </p>
+
+
+                        <a
+                            href="https://open.spotify.com/track/0T5iIrXA4p5GsubkhuBIKV"
+                            target="_blank"
+                            rel="noopener noreferrer"
+
+                            style="
+                                display:inline-block;
+                                background:#1db954;
+                                color:white;
+                                padding:10px 20px;
+                                border-radius:25px;
+                                text-decoration:none;
+                                font-weight:bold;
+                                font-size:14px;
+                            ">
+
+                            🎵 افتح الأغنية على Spotify
+
+                        </a>
+
+                    </div>
+
+                `,
+
+                showButton: false
+            }
+
+        ];
+
+
+        /* =========================================
+           المتغيرات
+        ========================================== */
+
+        let currentCardIndex = 0;
+
+        const bgMusic =
+            document.getElementById("bg-music");
+
+        let musicStarted = false;
+
+
+        /* =========================================
+           تشغيل الموسيقى
+        ========================================== */
+
+        async function startMusic() {
+
+            try {
+
+                bgMusic.volume = 0.5;
+
+                await bgMusic.play();
+
+                musicStarted = true;
+
+                document.getElementById(
+                    "music-text"
+                ).innerText = "إيقاف الموسيقى";
+
+            }
+
+            catch (error) {
+
+                console.error(
+                    "تعذر تشغيل الموسيقى:",
+                    error
+                );
+
+                document.getElementById(
+                    "music-text"
+                ).innerText = "تشغيل الموسيقى";
+
+            }
+
+        }
+
+
+        /* =========================================
+           فتح الهدية
+        ========================================== */
+
+        function openGift() {
+
+            if (!musicStarted) {
+                startMusic();
+            }
+
+            switchScreen(
+                "screen-gift",
+                "screen-greeting"
+            );
+
+        }
+
+
+        /* =========================================
+           زر الموسيقى
+        ========================================== */
+
+        async function toggleMusic() {
+
+            const musicText =
+                document.getElementById(
+                    "music-text"
+                );
+
+
+            if (bgMusic.paused) {
+
+                try {
+
+                    await bgMusic.play();
+
+                    musicStarted = true;
+
+                    musicText.innerText =
+                        "إيقاف الموسيقى";
+
+                }
+
+                catch (error) {
+
+                    console.error(error);
+
+                    alert(
+                        "لم يتم تشغيل الموسيقى. تأكد من وجود ملف Happy-Birthday-Piano.mp3 بجانب ملف HTML."
+                    );
+
+                }
+
+            }
+
+            else {
+
+                bgMusic.pause();
+
+                musicText.innerText =
+                    "تشغيل الموسيقى";
+
+            }
+
+        }
+
+
+        /* =========================================
+           تغيير الشاشة
+        ========================================== */
+
+        function switchScreen(
+            fromId,
+            toId
+        ) {
+
+            document
+                .getElementById(fromId)
+                .classList
+                .remove("active");
+
+            document
+                .getElementById(toId)
+                .classList
+                .add("active");
+
+        }
+
+
+        /* =========================================
+           شاشة الكعكة
+        ========================================== */
+
+        function goToCakeScreen() {
+
+            switchScreen(
+                "screen-greeting",
+                "screen-cake"
+            );
+
+            initMicrophone();
+
+        }
+
+
+        /* =========================================
+           المايكروفون
+        ========================================== */
+
+        function initMicrophone() {
+
+            const statusEl =
+                document.getElementById(
+                    "mic-status"
+                );
+
+
+            if (
+                navigator.mediaDevices &&
+                navigator.mediaDevices.getUserMedia
+            ) {
+
+                navigator.mediaDevices
+                    .getUserMedia({
+                        audio: true
+                    })
+
+                    .then(stream => {
+
+                        statusEl.innerText =
+                            "المايكروفون يعمل.. انفخ على الشمعة لإطفائها!";
+
+
+                        const AudioContext =
+                            window.AudioContext ||
+                            window.webkitAudioContext;
+
+
+                        if (!AudioContext) {
+
+                            statusEl.innerText =
+                                "المتصفح لا يدعم تحليل الصوت. انقر على الشمعة يدوياً!";
+
+                            stream
+                                .getTracks()
+                                .forEach(
+                                    track =>
+                                        track.stop()
+                                );
+
+                            return;
+                        }
+
+
+                        const audioContext =
+                            new AudioContext();
+
+
+                        const analyser =
+                            audioContext.createAnalyser();
+
+
+                        const microphone =
+                            audioContext
+                                .createMediaStreamSource(
+                                    stream
+                                );
+
+
+                        microphone.connect(
+                            analyser
+                        );
+
+
+                        analyser.fftSize = 256;
+
+
+                        const bufferLength =
+                            analyser.frequencyBinCount;
+
+
+                        const dataArray =
+                            new Uint8Array(
+                                bufferLength
+                            );
+
+
+                        function checkBlow() {
+
+                            analyser
+                                .getByteFrequencyData(
+                                    dataArray
+                                );
+
+
+                            let sum = 0;
+
+
+                            for (
+                                let i = 0;
+                                i < bufferLength;
+                                i++
+                            ) {
+
+                                sum +=
+                                    dataArray[i];
+
+                            }
+
+
+                            const average =
+                                sum /
+                                bufferLength;
+
+
+                            if (
+                                average > 45
+                            ) {
+
+                                extinguishCandle();
+
+                                stream
+                                    .getTracks()
+                                    .forEach(
+                                        track =>
+                                            track.stop()
+                                    );
+
+                                audioContext.close();
+
+                                return;
+
+                            }
+
+
+                            requestAnimationFrame(
+                                checkBlow
+                            );
+
+                        }
+
+
+                        checkBlow();
+
+                    })
+
+                    .catch(error => {
+
+                        console.error(
+                            "Microphone error:",
+                            error
+                        );
+
+                        statusEl.innerText =
+                            "تعذر الوصول للمايكروفون، انقر على الشمعة يدوياً لإطفائها!";
+
+                    });
+
+            }
+
+            else {
+
+                statusEl.innerText =
+                    "المتصفح لا يدعم المايكروفون، انقر على الشمعة يدوياً!";
+
+            }
+
+        }
+
+
+        /* =========================================
+           إطفاء الشمعة
+        ========================================== */
+
+        function blowCandleManually() {
+
+            extinguishCandle();
+
+        }
+
+
+        function extinguishCandle() {
+
+            const flame =
+                document.getElementById(
+                    "candle-flame"
+                );
+
+
+            if (
+                flame.classList.contains(
+                    "extinguished"
+                )
+            ) {
+                return;
+            }
+
+
+            flame.classList.add(
+                "extinguished"
+            );
+
+
+            document.getElementById(
+                "mic-status"
+            ).innerText =
+                "رائع! تم إطفاء الشمعة بنجاح 🎉";
+
+
+            setTimeout(
+                () => {
+
+                    goToMainContent();
+
+                },
+                1200
+            );
+
+        }
+
+
+        /* =========================================
+           الدخول للمحتوى
+        ========================================== */
+
+        function goToMainContent() {
+
+            switchScreen(
+                "screen-cake",
+                "screen-main"
+            );
+
+            updateCardContent();
+
+        }
+
+
+        /* =========================================
+           البطاقات
+        ========================================== */
+
+        function setCard(index) {
+
+            currentCardIndex =
+                index;
+
+            updateCardContent();
+
+        }
+
+
+        function updateCardContent() {
+
+            const card =
+                cardsData[
+                    currentCardIndex
+                ];
+
+
+            document.getElementById(
+                "card-icon"
+            ).innerText =
+                card.icon;
+
+
+            document.getElementById(
+                "card-title"
+            ).innerText =
+                card.title;
+
+
+            document.getElementById(
+                "card-text"
+            ).innerHTML =
+                card.text;
+
+
+            const extraBtn =
+                document.getElementById(
+                    "extra-btn"
+                );
+
+
+            if (
+                card.showButton
+            ) {
+
+                extraBtn.style.display =
+                    "inline-block";
+
+            }
+
+            else {
+
+                extraBtn.style.display =
+                    "none";
+
+            }
+
+
+            const dots =
+                document.querySelectorAll(
+                    ".dot"
+                );
+
+
+            dots.forEach(
+                (dot, idx) => {
+
+                    if (
+                        idx ===
+                        currentCardIndex
+                    ) {
+
+                        dot.classList.add(
+                            "active"
+                        );
+
+                    }
+
+                    else {
+
+                        dot.classList.remove(
+                            "active"
+                        );
+
+                    }
+
+                }
+            );
+
+        }
+
+
+        /* =========================================
+           النافذة المنبثقة
+        ========================================== */
+
+        function openModal() {
+
+            const card =
+                cardsData[
+                    currentCardIndex
+                ];
+
+
+            document.getElementById(
+                "modal-title"
+            ).innerText =
+                card.title;
+
+
+            document.getElementById(
+                "full-message-text"
+            ).innerText =
+                card.modalText ||
+                card.text;
+
+
+            document.getElementById(
+                "message-modal"
+            ).classList.add(
+                "open"
+            );
+
+        }
+
+
+        function closeModal() {
+
+            document.getElementById(
+                "message-modal"
+            ).classList.remove(
+                "open"
+            );
+
+        }
+
+
+        /* =========================================
+           تحميل أول بطاقة
+        ========================================== */
+
+        updateCardContent();
+
+    </script>
+
+</body>
+
+</html>
